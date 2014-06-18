@@ -6,7 +6,8 @@ Makefile.PL
 README
 README.md
 dist.ini
-dist.ini.derp
 lib/Data/Debug.pm
+t/author-critic.t
 t/debug.t
-test.pl
+t/release-pod-coverage.t
+t/release-pod-syntax.t

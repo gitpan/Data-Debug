@@ -1,7 +1,7 @@
 ---
 abstract: 'allows for basic data dumping and introspection.'
 author:
-  - 'James Lance <cpan@thelances.net>'
+  - "[ 'Paul Seamons <paul@seamons.com>',  'Russel Fisher <geistberg@gmail.com>' ]"
 build_requires:
   Test::More: 0
   warnings: 0
@@ -15,6 +15,10 @@ meta-spec:
   version: 1.4
 name: Data-Debug
 requires:
+  Apache: 0
+  Apache2::RequestRec: 0
+  Apache2::RequestUtil: 0
+  Apache::RequestUtil: 0
   B::Deparse: 0
   Carp::Heavy: 0
   Data::Dumper: 0
@@ -22,7 +26,4 @@ requires:
   base: 0
   perl: v5.8.0
   strict: 0
-resources:
-  homepage: https://github.com/geistberg/Data-Debug
-  repository: https://github.com/geistberg/Data-Debug.git
-version: 0.001
+version: 0.002

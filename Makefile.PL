@@ -11,7 +11,7 @@ use ExtUtils::MakeMaker 6.30;
 
 my %WriteMakefileArgs = (
   "ABSTRACT" => "allows for basic data dumping and introspection.",
-  "AUTHOR" => "James Lance <cpan\@thelances.net>",
+  "AUTHOR" => "[ 'Paul Seamons <paul\@seamons.com>',  'Russel Fisher <geistberg\@gmail.com>' ]",
   "BUILD_REQUIRES" => {},
   "CONFIGURE_REQUIRES" => {
     "ExtUtils::MakeMaker" => "6.30"
@@ -21,6 +21,10 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "Data::Debug",
   "PREREQ_PM" => {
+    "Apache" => 0,
+    "Apache2::RequestRec" => 0,
+    "Apache2::RequestUtil" => 0,
+    "Apache::RequestUtil" => 0,
     "B::Deparse" => 0,
     "Carp::Heavy" => 0,
     "Data::Dumper" => 0,
@@ -32,7 +36,7 @@ my %WriteMakefileArgs = (
     "Test::More" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.001",
+  "VERSION" => "0.002",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -40,6 +44,10 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
+  "Apache" => 0,
+  "Apache2::RequestRec" => 0,
+  "Apache2::RequestUtil" => 0,
+  "Apache::RequestUtil" => 0,
   "B::Deparse" => 0,
   "Carp::Heavy" => 0,
   "Data::Dumper" => 0,

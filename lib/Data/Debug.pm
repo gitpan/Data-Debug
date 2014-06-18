@@ -1,5 +1,10 @@
 package Data::Debug;
 
+=head1 NAME
+
+Data::Debug - allows for basic data dumping and introspection.
+
+=cut
 
 ####----------------------------------------------------------------###
 ##  Copyright 2014 - Bluehost                                         #
@@ -12,6 +17,37 @@ our @EXPORT    = qw(debug debug_warn);
 our @EXPORT_OK = qw(debug_text debug_html debug_plain caller_trace);
 our $QR_TRACE1 = qr{ \A (?: /[^/]+ | \.)* / (?: perl | lib | cgi(?:-bin)? ) / (.+) \Z }x;
 our $QR_TRACE2 = qr{ \A .+ / ( [\w\.\-]+ / [\w\.\-]+ ) \Z }x;
+our $VERSION   = 0.002;
+
+BEGIN {
+    ### cache mod_perl version (light if or if not mod_perl)
+    my $v = (! $ENV{'MOD_PERL'}) ? 0                                                                                                                                            
+        # mod_perl/1.27 or mod_perl/1.99_16 or mod_perl/2.0.1
+        # if MOD_PERL is set - don't die if regex fails - just assume 1.0
+        : ($ENV{'MOD_PERL'} =~ m{ ^ mod_perl / (\d+\.[\d_]+) (?: \.\d+)? $ }x) ? $1
+        : '1.0_0';
+    sub _mod_perl_version () { $v }
+    sub _is_mod_perl_1    () { $v <  1.98 && $v > 0 }
+    sub _is_mod_perl_2    () { $v >= 1.98 }
+
+    ### cache apache request getter (light if or if not mod_perl)
+    my $sub;
+    if (_is_mod_perl_1) { # old mod_perl
+        require Apache;
+        $sub = sub { Apache->request };
+    } elsif (_is_mod_perl_2) {
+        if (eval { require Apache2::RequestRec }) { # debian style
+            require Apache2::RequestUtil;
+            $sub = sub { Apache2::RequestUtil->request };
+        } else { # fedora and mandrake style
+            require Apache::RequestUtil;
+            $sub = sub { Apache->request };
+        }
+    } else {
+        $sub = sub {};
+    }
+    sub apache_request_sub () { $sub }
+}
 
 my %LINE_CACHE;
 my $DEPARSE;
@@ -131,9 +167,7 @@ sub debug_plain {
 }
 
 sub content_typed {
-    my $self = shift || __PACKAGE__->new;
-
-    if (my $r = $self->apache_request) {
+    if (my $r = apache_request_sub()->()) {
         return $r->bytes_sent;
     } else {
         return $ENV{'CONTENT_TYPED'} ? 1 : undef;
@@ -141,20 +175,12 @@ sub content_typed {
 }
 
 sub print_content_type {
-    my ($self, $type, $charset) = (@_ && ref $_[0]) ? @_ : (undef, @_);
-    $self = __PACKAGE__->new if ! $self;
+    my $type = "text/html";
 
-    if ($type) {
-        die "Invalid type: $type" if $type !~ m|^[\w\-\.]+/[\w\-\.\+]+$|; # image/vid.x-foo
-    } else {
-        $type = 'text/html';
-    }
-    $type .= "; charset=$charset" if $charset && $charset =~ m|^[\w\-\.\:\+]+$|;
-
-    if (my $r = $self->apache_request) {
+    if (my $r = apache_request_sub()->()) {
         return if $r->bytes_sent;
         $r->content_type($type);
-        $r->send_http_header if $self->is_mod_perl_1;
+        $r->send_http_header if _is_mod_perl_1;
     } else {
         if (! $ENV{'CONTENT_TYPED'}) {
             print "Content-Type: $type\r\n\r\n";
@@ -208,18 +234,6 @@ sub caller_trace {
 
 __END__
 
-=pod
-
-=encoding UTF-8
-
-=head1 NAME
-
-Data::Debug
-
-=head1 VERSION
-
-version 0.001
-
 =head1 SYNOPSIS
 
   use Data::Debug; # auto imports debug, debug_warn
@@ -262,10 +276,6 @@ if available.
 See also L<Data::Dumper>.
 
 Setting any of the Data::Dumper globals will alter the output.
-
-=head1 NAME
-
-Data::Debug - allows for basic data dumping and introspection.
 
 =head1 SUBROUTINES
 
@@ -310,16 +320,5 @@ This does require at least perl 5.8.0's Carp.
 
 Originally this was borrowed from CGI::Ex (written by Paul Seamons).  It
 has since had many customizations and optimizations by various people.
-
-=head1 AUTHOR
-
-James Lance <cpan@thelances.net>
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is copyright (c) 2014 by James Lance.
-
-This is free software; you can redistribute it and/or modify it under
-the same terms as the Perl 5 programming language system itself.
 
 =cut
