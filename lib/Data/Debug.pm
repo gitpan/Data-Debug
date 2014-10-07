@@ -17,7 +17,8 @@ our @EXPORT    = qw(debug debug_warn);
 our @EXPORT_OK = qw(debug_text debug_html debug_plain caller_trace);
 our $QR_TRACE1 = qr{ \A (?: /[^/]+ | \.)* / (?: perl | lib | cgi(?:-bin)? ) / (.+) \Z }x;
 our $QR_TRACE2 = qr{ \A .+ / ( [\w\.\-]+ / [\w\.\-]+ ) \Z }x;
-our $VERSION   = 0.002;
+
+our $VERSION = '0.03';
 
 BEGIN {
     ### cache mod_perl version (light if or if not mod_perl)

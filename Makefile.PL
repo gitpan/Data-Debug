@@ -21,10 +21,6 @@ my %WriteMakefileArgs = (
   "LICENSE" => "perl",
   "NAME" => "Data::Debug",
   "PREREQ_PM" => {
-    "Apache" => 0,
-    "Apache2::RequestRec" => 0,
-    "Apache2::RequestUtil" => 0,
-    "Apache::RequestUtil" => 0,
     "B::Deparse" => 0,
     "Carp::Heavy" => 0,
     "Data::Dumper" => 0,
@@ -36,7 +32,7 @@ my %WriteMakefileArgs = (
     "Test::More" => 0,
     "warnings" => 0
   },
-  "VERSION" => "0.002",
+  "VERSION" => "0.03",
   "test" => {
     "TESTS" => "t/*.t"
   }
@@ -44,10 +40,6 @@ my %WriteMakefileArgs = (
 
 
 my %FallbackPrereqs = (
-  "Apache" => 0,
-  "Apache2::RequestRec" => 0,
-  "Apache2::RequestUtil" => 0,
-  "Apache::RequestUtil" => 0,
   "B::Deparse" => 0,
   "Carp::Heavy" => 0,
   "Data::Dumper" => 0,

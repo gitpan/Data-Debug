@@ -15,10 +15,6 @@ meta-spec:
   version: 1.4
 name: Data-Debug
 requires:
-  Apache: 0
-  Apache2::RequestRec: 0
-  Apache2::RequestUtil: 0
-  Apache::RequestUtil: 0
   B::Deparse: 0
   Carp::Heavy: 0
   Data::Dumper: 0
@@ -26,4 +22,4 @@ requires:
   base: 0
   perl: v5.8.0
   strict: 0
-version: 0.002
+version: 0.03
